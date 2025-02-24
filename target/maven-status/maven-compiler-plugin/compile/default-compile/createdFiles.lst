@@ -1,0 +1,10 @@
+com\mycompany\tienda\Cliente.class
+com\mycompany\tienda\ComparaArticulosPorExistencias.class
+com\mycompany\tienda\ComparaArticulosPorPrecio.class
+com\mycompany\tienda\Pedido.class
+com\mycompany\tienda\MetodosAux.class
+com\mycompany\tienda\StockAgotado.class
+com\mycompany\tienda\Articulo.class
+com\mycompany\tienda\LineaPedido.class
+com\mycompany\tienda\StockInsuficiente.class
+com\mycompany\tienda\Tienda.class

@@ -48,6 +48,21 @@ public class Tienda implements Serializable {
         return clientes;
     }
     
+
+    public void lista (String seccion){
+            
+        String[] secciones={"","PERIFERICOS","ALMACENAMIENTO","IMPRESORAS","MONITORES","TODAS"};
+        
+        System.out.println("ARTICULOS DE LA SECCION: "+ secciones[Integer.parseInt(seccion)]);
+        if (seccion.equals("5")){
+            //Listamos todos los artículos ordenados por PRECIO
+            articulos.values().stream().sorted().forEach(System.out::println);
+        }else{
+            //Listamos los artículos de la sección indicada ordenados por PRECIO
+            articulos.values().stream().filter(a -> a.getIdArticulo().startsWith(seccion))
+                          .sorted().forEach(System.out::println);
+        }
+    }
     public static void main(String[] args) {
         Tienda t= new Tienda();
         t.leerArchivos();
@@ -66,6 +81,7 @@ public class Tienda implements Serializable {
             System.out.println("2. ARTÍCULOS");
             System.out.println("3. CLIENTES");
             System.out.println("4. HACER COPIA DE SEGURIDAD");
+            System.out.println("5. LEER ARCHIVOS DE UNA SECCIÓN");
             System.out.println("9. SALIR");
             opcion = sc.nextInt();
             switch (opcion) {
@@ -83,6 +99,10 @@ public class Tienda implements Serializable {
                 }
                 case 4: {
                     backup();
+                    break;
+                }
+                case 5: {
+                    leerArchivosSeccion();
                     break;
                 }
             }
@@ -121,8 +141,9 @@ public class Tienda implements Serializable {
         do {
             System.out.println("1. NUEVO ARTÍCULO");
             System.out.println("2. LISTA DE ARTÍCULOS");
-            System.out.println("3. ARTÍCULOS MÁS VENDIDOS");
-            System.out.println("4. ");
+            System.out.println("3. ELIMINAR ARTÍCULO");
+            System.out.println("4. ARTÍCULOS MÁS VENDIDOS");
+            System.out.println("5. LISTADO POR SECCION");
             System.out.println("9. SALIR");
             opcion = sc.nextInt();
             switch (opcion) {
@@ -134,6 +155,9 @@ public class Tienda implements Serializable {
                     ordenarArticulosPorDemanda();
                     break;
                 }
+                case 4: {
+                    listadoSeccion();
+                    break;}
             }
         } while (opcion != 9);
     }
@@ -286,13 +310,26 @@ public class Tienda implements Serializable {
         return pedidos.stream().flatMap(p -> p.getCestaCompra().stream()) .filter(lp -> lp.getIdArticulo().equals(idArticulo)).mapToInt(LineaPedido::getUnidades).sum();
     }
     
-    
-    public void ordenarArticulosPorDemanda() {
-        articulos.values().stream()
-                .sorted(Comparator.comparing(a -> cantidadTotalVendida(a.getIdArticulo()), Comparator.reverseOrder()))
-                .forEach(a-> System.out.println(a + " \t - el número de artículos vendidos es: " + cantidadTotalVendida(a.getIdArticulo())));
+    public void leerArchivosSeccion() {
+        System.out.println("Introduce la sección de la que quieres ver los artículos: ");
+        String id = sc.nextLine();
+        ArrayList<Articulo> articulosAux = new ArrayList();
+        Articulo a;
+        try (ObjectInputStream oisArticulos = new ObjectInputStream(new FileInputStream("articulos.dat"))){
+            while ( (a=(Articulo)oisArticulos.readObject()) != null){
+                if (a.getIdArticulo().startsWith(id)) {
+                    articulosAux.add(a);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.toString());
+        } catch (EOFException e) {
+        } catch (ClassNotFoundException | IOException e) {
+            System.out.println(e.toString());
+        }
+        articulosAux.forEach(System.out::println);
     }
-    
+
 //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="GESTIÓN DE PEDIDOS">

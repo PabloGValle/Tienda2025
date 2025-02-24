@@ -6,7 +6,7 @@ package com.mycompany.tienda;
 
 /**
  *
- * @author alu01d
+ * @author alu17d
  */
 public class MetodosAux {
     public static boolean validarDNI(String dni) {
