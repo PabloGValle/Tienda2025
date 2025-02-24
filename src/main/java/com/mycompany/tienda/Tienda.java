@@ -82,6 +82,7 @@ public class Tienda implements Serializable {
             System.out.println("3. CLIENTES");
             System.out.println("4. HACER COPIA DE SEGURIDAD");
             System.out.println("5. LEER ARCHIVOS DE UNA SECCIÓN");
+            System.out.println("6. HACER COPIA DE SEGURIDAD DE UNA SECCIÓN");
             System.out.println("9. SALIR");
             opcion = sc.nextInt();
             switch (opcion) {
@@ -103,6 +104,10 @@ public class Tienda implements Serializable {
                 }
                 case 5: {
                     leerArchivosSeccion();
+                    break;
+                }
+                case 6: {
+                    backupSeccion();
                     break;
                 }
             }
@@ -151,13 +156,6 @@ public class Tienda implements Serializable {
                     listarArticulos();
                     break;
                 }
-                case 2: {
-                    ordenarArticulosPorDemanda();
-                    break;
-                }
-                case 4: {
-                    listadoSeccion();
-                    break;}
             }
         } while (opcion != 9);
     }
@@ -519,6 +517,41 @@ public class Tienda implements Serializable {
             System.out.println(e.toString());
         }
     }
+    public void backupSeccion(){
+        
+        try (ObjectOutputStream oosPerifericos=new ObjectOutputStream(new FileOutputStream("perifericos.dat"));
+            ObjectOutputStream oosAlmacenamiento=new ObjectOutputStream(new FileOutputStream("almacenamiento.dat"));
+            ObjectOutputStream oosImpresoras=new ObjectOutputStream(new FileOutputStream("impresoras.dat"));
+            ObjectOutputStream oosMonitores=new ObjectOutputStream(new FileOutputStream("monitores.dat"))){
+                            
+            for (Articulo p: articulos.values()) {
+                char seccion=p.getIdArticulo().charAt(0);
+                switch (seccion){
+                    case '1':
+                        oosPerifericos.writeObject(p);
+                        break;
+                    case '2':
+                        oosAlmacenamiento.writeObject(p);
+                        break;
+                    case '3':
+                        oosImpresoras.writeObject(p);
+                        break;
+                    case '4':
+                        oosMonitores.writeObject(p);
+                        break;
+                }
+            }
+
+        System.out.println("Copia de seguridad realizada con éxito =)");
+    }
+
+            catch (FileNotFoundException e) {
+                System.out.println(e.toString());
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            }
+    }
+    
     
    public void leerArchivos() {
         try (ObjectInputStream oisArticulos = new ObjectInputStream(new FileInputStream("articulos.dat"))){
