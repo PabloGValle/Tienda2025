@@ -544,12 +544,42 @@ public class Tienda implements Serializable {
 
         System.out.println("Copia de seguridad realizada con éxito =)");
     }
-
+            
             catch (FileNotFoundException e) {
                 System.out.println(e.toString());
             } catch (IOException e) {
                 System.out.println(e.toString());
             }
+
+        System.out.println("Teclea el numero de seccion que quieres comprobar");
+        char seccion=sc.next().charAt(0);
+        String nombreFichero="null";
+        switch (seccion){
+            case '1':
+                nombreFichero="perifericos.dat";
+                break;
+            case '2':
+                nombreFichero="almacenamiento.dat";
+                break;
+            case '3':
+                nombreFichero="impresoras.dat";
+                break;
+            case '4':
+                nombreFichero="monitores.dat";
+                break;
+        }
+        Articulo p;
+        try (ObjectInputStream oisPerifericos = new ObjectInputStream(new FileInputStream(nombreFichero))){
+            while ( (p=(Articulo)oisPerifericos.readObject()) != null){
+                System.out.println(p);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.toString());
+        } catch (EOFException e) {
+        } catch (ClassNotFoundException | IOException e) {
+            System.out.println(e.toString());
+        }
+    
     }
     
     
