@@ -427,6 +427,7 @@ public class Tienda implements Serializable {
                 idT=sc.nextLine();
             }
          
+            
             //IMPRIMO EL PEDIDO Y SOLICITO ACEPTACION DEFINITIVA DEL MISMO 
             for (LineaPedido l:CestaCompraAux)
             {
